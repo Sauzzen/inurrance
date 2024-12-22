@@ -1,0 +1,14 @@
+flask 
+flask_login 
+
+flask_sqlalchemy 
+flask_session 
+sqlite3
+cv2
+threading
+deepface
+os
+werkzeug.utils 
+hashlib 
+functools
+Flask

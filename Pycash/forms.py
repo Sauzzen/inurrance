@@ -2,6 +2,13 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 import sqlite3
+import hashlib
+
+# Hash password function
+def hash_password(password):
+    sha256_hash = hashlib.sha256()
+    sha256_hash.update(password.encode('utf-8'))
+    return sha256_hash.hexdigest()
 
 # Login Form
 class LoginForm(FlaskForm):
@@ -39,3 +46,8 @@ class SignUpForm(FlaskForm):
         valemail = curs.fetchone()
         if valemail:
             raise ValidationError('Email already exists. Please use a different email.')
+
+    def hash_password_on_submit(self):
+        if self.password.data:
+            return hash_password(self.password.data)  # Hash the password during form submission
+        return None

@@ -6,11 +6,13 @@ from models import User, db
 from flask_session import Session
 import sqlite3
 import cv2
+
 import threading
 from deepface import DeepFace
 import os
 from werkzeug.utils import secure_filename
 import hashlib 
+from functools import wraps
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'your_secret_key_here'
@@ -39,7 +41,17 @@ def hash_password(password):
     sha256_hash.update(password.encode('utf-8'))
     return sha256_hash.hexdigest()
 
+def is_logged_in():
+    return session.get('logged_in', False)
 
+def login_session_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'logged_in' not in session:
+            flash("Please log in first.", "warning")
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 # Flask User model 
 class User(UserMixin):
@@ -214,6 +226,9 @@ def index():
                 user_obj = User(user[0], user[1], user[2], user[3], user[4], user[5])  # Add the email (user[2]) and password (user[3]) correctly
                 login_user(user_obj, remember=form.remember.data)
                 flash(f"Logged in successfully, {email_input.split('@')[0]}!", 'success')
+                session['logged_in'] = True
+                session['user_id'] = user[0]
+                session['username'] = user[1]
                 print("Login successful, redirecting to dashboard...")  # Debugging line
                 return redirect(url_for('dashboard'))  # Redirect to dashboard after successful login
             else:
@@ -225,10 +240,15 @@ def index():
 
     return render_template('index.html', title="Login", form=form, forget_form=forget_form, sign_up_form=sign_up_form)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    # login logic
+    return render_template('index.html')
 
 
 @app.route('/profile', methods=['GET', 'POST'])
-@login_required
+
+@login_session_required
 def profile():
     if request.method == 'POST':
         # Get the user input from the form
@@ -265,7 +285,8 @@ def profile():
     return render_template('profile.html')
 
 @app.route('/usermanagement', methods=['GET', 'POST'])
-@login_required
+
+@login_session_required
 def user_management():
     # Ensure only admins can access this page
     if not getattr(current_user, 'is_admin', False):  # Fix: Correct admin check
@@ -294,7 +315,7 @@ def user_management():
     return render_template('usermanagement.html', users=users)
 
 @app.route('/delete_user/<int:user_id>', methods=['POST'])
-@login_required
+
 def delete_user(user_id):
     # Only allow admins to delete users
     if not current_user.is_admin:
@@ -319,8 +340,12 @@ def registered():
     return render_template('registered.html')  # Render the registered page extending base.html
 
 @app.route('/dashboard')
-@login_required  # Make sure the user is logged in before accessing the dashboard
+@login_session_required
+  # Make sure the user is logged in before accessing the dashboard
 def dashboard():
+    if not is_logged_in():
+        flash("Please log in to access the dashboard.", "danger")
+        return redirect(url_for('index'))
     username = session.get('username', 'Guest')
     return render_template('dashboard.html', username=username)
 
@@ -337,7 +362,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/upload_photo', methods=['POST'])
-@login_required  # Ensure the user is logged in before uploading
+  # Ensure the user is logged in before uploading
 def upload_photo():
     # Get the username of the current logged-in user
     username = current_user.username
@@ -374,20 +399,23 @@ def upload_photo():
     return redirect(url_for('profile'))  # Redirect back to profile
 
 @app.route('/logout')
-@login_required
+
 def logout():
     logout_user()
+    session.pop('logged_in', None)
+    session.pop('user_id', None)
+    session.pop('username', None)
     flash("You have been logged out.", "info")
     return redirect(url_for('index'))
 
 @app.route('/video_feed')
-@login_required
+
 def video_feed():
     """Stream the video feed."""
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/check_match_status')
-@login_required
+
 def check_match_status():
     """Return the face match status as JSON."""
     global face_match
@@ -395,7 +423,7 @@ def check_match_status():
         return jsonify({"face_match": face_match})
 
 @app.route('/face_cash', methods=['GET', 'POST'])
-@login_required
+
 def face_cash():
     total_price = request.args.get('total_price', 0)
 
@@ -411,7 +439,7 @@ def face_cash():
     return render_template('face_cash.html', total_price=total_price)
 
 @app.route('/payment_success')
-@login_required
+
 def payment_success():
     items = session.get('cart', [])  # Retrieve items from session
     total_price = session.get('total_price', 0.0)  # Retrieve total price from session
