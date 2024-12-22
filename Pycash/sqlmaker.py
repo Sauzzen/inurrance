@@ -1,38 +1,25 @@
 import sqlite3
 
-# Helper function to get a user by email
-def get_user_by_email(email):
-    with sqlite3.connect('login.db') as conn:
-        curs = conn.cursor()
-        curs.execute("SELECT * FROM login WHERE email = ?", [email])
-        return curs.fetchone()
+# Connect to SQLite database (creates a new database if it doesn't exist)
+conn = sqlite3.connect('users.db')
 
-# Function to check user login
-def check_login(email_input, password_input):
-    # Retrieve user by email
-    user = get_user_by_email(email_input)
+# Create a cursor object to execute SQL commands
+cursor = conn.cursor()
 
-    # If user exists
-    if user:
-        print(f"User found: {user}")  # Debugging line
-        # Compare passwords (the actual password is in index 3, not 2)
-        if user[3] == password_input:  # Correct column for password
-            print("Password match!")  # Debugging line
-            return True  # Successful login
-        else:
-            print(f"Password mismatch: {password_input} != {user[3]}")  # Debugging line
-            return False  # Incorrect password
-    else:
-        print("No user found with that email.")  # Debugging line
-        return False  # User not found
+# SQL command to create the users table
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        user_id INTEGER PRIMARY KEY AUTOINCREMENT, -- Auto-increment ID
+        username TEXT NOT NULL,                   -- Username (required)
+        email TEXT UNIQUE NOT NULL,               -- Email (required and unique)
+        password TEXT NOT NULL,                   -- Password (required)
+        photo TEXT DEFAULT 'default.jpg',         -- Photo with default value
+        is_admin BOOLEAN DEFAULT 0                -- Admin flag, default to False
+    )
+''')
 
-if __name__ == "__main__":
-    # Get email and password input from the user
-    email_input = input("Enter your email: ").strip()
-    password_input = input("Enter your password: ").strip()
+# Commit changes and close the connection
+conn.commit()
+conn.close()
 
-    # Check login
-    if check_login(email_input, password_input):
-        print("Login successful!")
-    else:
-        print("Login unsuccessful. Please check your email and password.")
+print("Table created successfully.")

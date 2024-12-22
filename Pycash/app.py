@@ -10,7 +10,7 @@ import threading
 from deepface import DeepFace
 import os
 from werkzeug.utils import secure_filename
-
+import hashlib 
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'your_secret_key_here'
@@ -33,30 +33,21 @@ def get_user_by_id(user_id):
         curs = conn.cursor()
         curs.execute("SELECT * FROM login WHERE user_id = ?", (user_id,))
         return curs.fetchone()
+    
+def hash_password(password):
+    sha256_hash = hashlib.sha256()
+    sha256_hash.update(password.encode('utf-8'))
+    return sha256_hash.hexdigest()
 
-# Video and face matching globals
-cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-face_match = False
-reference_img_path = "static/img/reference.jpg"
-reference_img = cv2.imread(reference_img_path)
 
-if reference_img is None:
-    raise FileNotFoundError(f"Reference image not found at '{reference_img_path}'")
 
-# Convert to RGB and resize for DeepFace
-reference_img = cv2.cvtColor(reference_img, cv2.COLOR_BGR2RGB)
-reference_img = cv2.resize(reference_img, (224, 224))
-lock = threading.Lock()
-
-# Flask User model
+# Flask User model 
 class User(UserMixin):
     def __init__(self, user_id, username, email, password,photo, is_admin=False):
         self.id = str(user_id)  # user_id is passed as the first argument
         self.username = username
         self.email = email
-        self.password = password 
+        self.password = hash_password(password)
         self.photo = photo
         self.is_admin = bool(is_admin)  # Ensures is_admin is a boolean value
 
@@ -114,6 +105,25 @@ def check_face(frame):
         with lock:
             face_match = False
 
+
+# Video and face matching globals
+cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+face_match = False
+reference_img_path = "static/img/reference.jpg"
+reference_img = cv2.imread(reference_img_path)
+
+if reference_img is None:
+    raise FileNotFoundError(f"Reference image not found at '{reference_img_path}'")
+
+# Convert to RGB and resize for DeepFace
+
+lock = threading.Lock()
+
+
+
+
 def generate_frames():
     """Generate video frames with face match status."""
     global face_match
@@ -154,6 +164,7 @@ def index():
             flash("Email already registered. Please log in.", "danger")
             return redirect(url_for('index'))
         
+        hashed_password = hash_password(sign_up_form.password.data)
         # Determine if the user wants to register as admin
         is_admin = 1 if 'is_admin' in request.form and request.form['is_admin'] == '1' else 0  # Check if admin checkbox is selected
         
@@ -163,12 +174,12 @@ def index():
             curs.execute("INSERT INTO login (username, email, password, is_admin) VALUES (?, ?, ?, ?)",
                         [sign_up_form.username.data, 
                         sign_up_form.email.data, 
-                        sign_up_form.password.data, 
+                        hashed_password, 
                         is_admin])  # Set admin flag based on input
             conn.commit()
 
         flash("Account created successfully! Please log in.", "success")
-        return redirect(url_for('dashboard'))  # Redirect to registered page
+        return redirect(url_for('index'))  # Redirect to registered page
 
 
     # Handle Forget Password form submission
@@ -186,7 +197,8 @@ def index():
         password_input = form.password.data.strip()
 
         print(f"Attempting login with Email: '{email_input}' and Password: '{password_input}'")  # Debugging line
-
+        
+        hashed_password = hash_password(password_input)
         # Retrieve user by email
         user = get_user_by_email(email_input)
 
@@ -197,7 +209,7 @@ def index():
             print(f"Stored password: {stored_password}")  # Debugging line
 
             # Check password match
-            if stored_password == password_input:
+            if stored_password == hashed_password:
                 print("Password match!")  # Debugging line
                 user_obj = User(user[0], user[1], user[2], user[3], user[4], user[5])  # Add the email (user[2]) and password (user[3]) correctly
                 login_user(user_obj, remember=form.remember.data)
@@ -223,8 +235,11 @@ def profile():
         new_username = request.form['username']
         new_email = request.form['email']
         new_password = request.form['password']
+        hashed_password = hash_password(new_password)
         photo = request.files.get('photo')
-
+        
+        
+        
         # Handle photo upload
         if photo and allowed_file(photo.filename):
             filename = secure_filename(new_username + '.' + photo.filename.rsplit('.', 1)[1])
@@ -248,26 +263,34 @@ def profile():
         return redirect(url_for('profile'))  # Redirect to the same page to reflect changes
 
     return render_template('profile.html')
+
 @app.route('/usermanagement', methods=['GET', 'POST'])
 @login_required
 def user_management():
     # Ensure only admins can access this page
-    if not getattr(current_user, 'is_admin', False):  # Safeguard in case 'is_admin' is missing
+    if not getattr(current_user, 'is_admin', False):  # Fix: Correct admin check
         flash("You do not have permission to view this page.", "danger")
-        return redirect(url_for('user_management'))  # Redirect to a safe page (dashboard)
+        return redirect(url_for('dashboard'))  # Redirect non-admins to a safe page
+
+    users = []  # Default empty list to avoid errors in case of failure
 
     try:
         # Connect to the database and fetch user data
         with sqlite3.connect('login.db') as conn:
-            conn.row_factory = sqlite3.Row  # Allows dictionary-like access to rows
+            conn.row_factory = sqlite3.Row  # Enables dictionary-like row access
             curs = conn.cursor()
-            curs.execute("SELECT * FROM login")  # Fetch all user records
+
+            # Fetch all user records
+            curs.execute("SELECT user_id, username, email, is_admin, photo FROM login")
             users = curs.fetchall()
     except sqlite3.Error as e:
-        flash(f"Database error: {str(e)}", "danger")  # Display error if query fails
-        users = []  # Default empty list to avoid template errors
+        # Log database error and notify the user
+        flash(f"Database error: {str(e)}", "danger")
+    except Exception as e:
+        # Catch other unexpected exceptions
+        flash(f"An unexpected error occurred: {str(e)}", "danger")
 
-    # Render the User Management template and pass users
+    # Render template and pass user data
     return render_template('usermanagement.html', users=users)
 
 @app.route('/delete_user/<int:user_id>', methods=['POST'])
