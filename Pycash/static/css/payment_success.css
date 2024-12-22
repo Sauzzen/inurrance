@@ -1,0 +1,127 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1rem 9%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    height: 60px;
+    z-index: 100;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+header .logo img {
+    max-width: 100px;
+    height: auto;
+}
+
+nav ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav a {
+    color: white;
+    font-size: 1.2rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #bdc3c7;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url(/static/img/background.png);
+    color: #333;
+    padding: 20px;
+}
+
+.payment-success {
+    background-color: rgba(109, 103, 103, 0.548);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.payment-success-message h1 {
+    font-size: 2.5rem;
+    color: #bac2be;
+    margin-bottom: 20px;
+}
+
+.payment-success-message p {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-bottom: 30px;
+}
+
+.order-details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.order-details th,
+.order-details td {
+    color: #ffffff;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #494949;
+}
+
+.order-details th {
+    background-color: #2c3e50;
+    color: white;
+    font-weight: 600;
+}
+
+.order-details td {
+    background-color: #3f79b3;
+}
+
+.order-details tr:hover {
+    background-color: #ecf0f1;
+}
+
+.payment-actions .btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #27ae60;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.payment-actions .btn:hover {
+    background-color: #2ecc71;
+    transform: translateY(-2px);
+}
+
+.payment-actions .btn:active {
+    transform: translateY(0);
+}

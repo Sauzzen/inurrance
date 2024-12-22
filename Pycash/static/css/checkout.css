@@ -1,0 +1,159 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-image: url(/static/img/background.png);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* Header */
+.header {
+    background-color: #2c3e5094;
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-container img {
+    max-width: 150px;
+    height: auto;
+}
+
+/* Checkout Container */
+.checkout-container {
+    width: 80%;
+    max-width: 900px;
+    margin-top: 20px;
+    padding: 30px;
+    background-color: rgba(187, 187, 187, 0.801);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-title {
+    font-size: 2rem;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Product Table */
+.product-table-container {
+    margin-bottom: 20px;
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.product-table th, .product-table td {
+    padding: 12px;
+    text-align: left;
+    font-size: 1rem;
+}
+
+.product-table th {
+    background-color: #2c3e50;
+    color: white;
+}
+
+.product-table td {
+    background-color: #ecf0f1;
+}
+
+.total-row {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #27ae60;
+}
+
+/* Customer Form */
+.customer-info-form {
+    margin-top: 30px;
+}
+
+.customer-info-form h2 {
+    font-size: 1.5rem;
+    color: #34495e;
+    margin-bottom: 10px;
+}
+
+.form-field {
+    margin-bottom: 15px;
+}
+
+.form-field label {
+    font-size: 1rem;
+    color: #34495e;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-field input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    outline: none;
+    background-color: #ecf0f1;
+}
+
+.form-field input:focus {
+    border-color: #27ae60;
+}
+
+/* Submit Button */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.2rem;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #2ecc71;
+}
+
+/* Empty Cart Message */
+.empty-cart-message {
+    font-size: 1.2rem;
+    text-align: center;
+    color: #e74c3c;
+}
+
+/* Back to Shop Link */
+.back-to-shop-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #3498db;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.back-to-shop-link:hover {
+    color: #2980b9;
+}

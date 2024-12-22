@@ -1,0 +1,130 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Body Styling */
+body {
+    background-image: url(/static/img/background.png);
+    color: #333;
+    padding: 20px;
+}
+.user-table {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.26);
+    width: 250px;
+    text-align: center;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    margin: 0 auto; /* Horizontally center */
+    position: absolute; /* For vertical centering */
+    top: 50%; /* Position vertically at the center */
+    left: 50%; /* Position horizontally at the center */
+    transform: translate(-50%, -50%); /* Adjust to truly center it */
+}
+nav ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav a {
+    color: white;
+    font-size: 1.2rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #bdc3c7;
+}
+/* Table Styles */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    box-shadow: 0 4px 10px rgb(0, 0, 0);
+}
+
+thead th {
+    background-color: #09173f;
+    color: white;
+    padding: 10px;
+    text-align: left;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+    background-color: #cfd8dc;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+/* Header Styling */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1rem 9%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    background-color: rgb(0, 0, 0);
+}
+
+header img {
+    max-width: 100px;
+    height: auto;
+}
+
+/* Flash Messages */
+.alert {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.alert-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.alert-success {
+    background-color: #2ecc71;
+    color: white;
+}
+
+/* Title Styling */
+h1 {
+    text-align: center;
+    margin-top: 5rem;
+    color: #09173f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    table {
+        font-size: 0.9rem;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+}

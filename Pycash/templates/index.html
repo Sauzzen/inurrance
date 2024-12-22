@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Login</title>
+    <header>
+        <a href="{{ url_for('index') }}" class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        </a>
+    </header>
+{% endblock %}
+
+{% block body %}
+<div class="box" id="box">
+    <div class="form">
+        <!-- Sign In Form -->
+        <form method="POST" action="{{ url_for('index') }}" id="signIn">
+            {{ form.hidden_tag() }}
+            <input type="hidden" name="action" value="login">
+            <h2>Sign In</h2>
+            <div class="inputBox">
+                {{ form.email(class="form-control", required="required") }}
+                <span>Email</span>
+                <i></i>
+            </div>
+            <div class="inputBox">
+                {{ form.password(class="form-control", required="required") }}
+                <span>Password</span>
+                <i></i>
+            </div>
+            <div class="links">
+                <a href="javascript:void(0);" onclick="forgetPassword()">Forget Password</a>
+                <a href="javascript:void(0);" onclick="signUp()">Sign Up</a>
+            </div>
+            <input type="submit" value="Login">
+        </form>
+        
+
+        <!-- Forget Password Form -->
+        <form method="POST" action="{{ url_for('index') }}" id="forgetPassword">
+            {{ forget_form.hidden_tag() }}
+            <input type="hidden" name="action" value="forget_password">
+            <h2>Forget Password</h2>
+            <div class="inputBox">
+                {{ forget_form.email(class="form-control", required="required") }}
+                <span>Username</span>
+                <i></i>
+            </div>
+            <div class="links">
+                <a href="javascript:void(0);" onclick="signIn()">Sign In</a>
+                <a href="javascript:void(0);" onclick="signUp()">Sign Up</a>
+            </div>
+            <input type="submit" value="Reset">
+        </form>
+
+        <!-- Sign Up Form -->
+        <form method="POST" action="{{ url_for('index') }}" id="signUp">
+            {{ sign_up_form.hidden_tag() }}
+            <input type="hidden" name="action" value="sign_up">
+            <h2>Sign Up</h2>
+            
+            <!-- Username field -->
+            <div class="inputBox">
+                {{ sign_up_form.username(class="form-control", required="required") }}
+                <span>Username</span>
+                <i></i>
+                {% for error in sign_up_form.username.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <!-- Email field -->
+            <div class="inputBox">
+                {{ sign_up_form.email(class="form-control", required="required") }}
+                <span>Email</span>
+                <i></i>
+                {% for error in sign_up_form.email.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <!-- Password field -->
+            <div class="inputBox">
+                {{ sign_up_form.password(class="form-control", required="required") }}
+                <span>Password</span>
+                <i></i>
+                {% for error in sign_up_form.password.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <!-- Confirm Password field -->
+            <div class="inputBox">
+                {{ sign_up_form.confirm_password(class="form-control", required="required") }}
+                <span>Confirm Password</span>
+                <i></i>
+                {% for error in sign_up_form.confirm_password.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <!-- Admin Registration Checkbox -->
+            <div class="inputBox">
+                <label for="is_admin">
+                    {{ sign_up_form.is_admin() }} Register as Admin
+                </label>
+            </div>
+            <div class="links">
+                <a href="javascript:void(0);" onclick="forgetPassword()">Forget Password</a>
+                <a href="javascript:void(0);" onclick="signIn()">Sign In</a>
+            </div>
+            
+            <input type="submit" value="Register">
+        </form>
+        
+    </div>
+</div>
+
+{% endblock %}

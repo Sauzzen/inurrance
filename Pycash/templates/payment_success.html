@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Payment Success</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/payment_success.css') }}">
+{% endblock %}
+
+{% block body %}
+<header>
+    <a href="{{ url_for('dashboard') }}" class="logo">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+    </a>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+        </ul>
+    </nav>
+</header>
+    <div class="payment-success">
+        <div class="payment-success-message">
+            <h1>Payment Successful!</h1>
+            <p>Your payment has been processed successfully.</p>
+
+            <!-- Order Details Table -->
+            <div class="order-details">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ item.price }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="2"><strong>Total Cost</strong></td>
+                            <td><strong>${{ total_price }}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Action Button -->
+            <div class="payment-actions">
+                <a href="{{ url_for('dashboard') }}" class="btn">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

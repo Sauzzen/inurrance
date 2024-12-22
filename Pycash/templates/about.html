@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>About Us</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+{% endblock %}
+
+{% block body %}
+<header>
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+        </ul>
+    </nav>
+</header>
+    <div class="about-us">
+        <div class="about-us-header">
+            <h1>About Us</h1>
+            <p>Meet the team behind the project</p>
+        </div>
+
+        <div class="team-members">
+            <div class="team-member">
+                <img src="{{ url_for('static', filename='img/rigel.png') }}" alt="Rigel Parco">
+                <h3>Rigel Parco</h3>
+                <p>Project Manager & Developer</p>
+                <p>Rigel is the driving force behind the project, coordinating efforts and ensuring that everything stays on track.</p>
+            </div>
+
+            <div class="team-member">
+                <img src="{{ url_for('static', filename='img/leo.png') }}" alt="Leo Tagum">
+                <h3>Leo Tagum</h3>
+                <p>Lead Developer</p>
+                <p>Leo is the lead developer, handling the core code, backend systems, and ensuring smooth technical performance.</p>
+            </div>
+
+            <div class="team-member">
+                <img src="{{ url_for('static', filename='img/caren.png') }}" alt="Caren Epress">
+                <h3>Caren Epress</h3>
+                <p>UI/UX Designer</p>
+                <p>Caren designs the user interface and experience, ensuring the application is intuitive and visually appealing.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

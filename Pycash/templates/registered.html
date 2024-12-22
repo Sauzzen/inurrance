@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registered.css') }}">
+    <title>Registration Complete</title>
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+                <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h1>Welcome! Please take a photo to complete your registration.</h1>
+
+    <div>
+        <video id="video" width="640" height="480" autoplay></video>
+        <button id="capture">Capture Photo</button>
+        <canvas id="canvas" style="display: none;"></canvas>
+    </div>
+
+    <!-- Photo Form for Upload -->
+    <form id="photoForm" action="{{ url_for('upload_photo') }}" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="username" id="username" value="{{ current_user.username }}">
+        <input type="hidden" name="photo" id="photo">
+        <button type="submit" style="display:none;">Submit Photo</button> <!-- Hide the submit button initially -->
+    </form>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('capture');
+        const photoInput = document.getElementById('photo');
+        const photoForm = document.getElementById('photoForm');
+
+        // Access the webcam and start streaming video
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                alert("Error accessing webcam: " + err);
+            });
+
+        // Capture the image from the video feed
+        captureButton.addEventListener('click', () => {
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/jpeg');
+
+            // Convert the captured image to a file for uploading
+            fetch(dataUrl)
+                .then(res => res.blob())
+                .then(blob => {
+                    const file = new File([blob], "captured_image.jpg", { type: 'image/jpeg' });
+                    const formData = new FormData();
+                    formData.append('photo', file);  // Attach the photo file
+                    formData.append('username', document.getElementById('username').value);  // Add the username
+
+                    // Now, submit the form with the captured photo using fetch
+                    fetch("{{ url_for('upload_photo') }}", {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.text())
+                    .then(result => {
+                        alert(result);  // Show the result (success message)
+                        window.location.href = "{{ url_for('dashboard') }}"; // Redirect after successful upload
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7fc;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Header Styles */
+header {
+    background-color: #2c3e5086;
+    color: #fff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo img {
+    height: 40px;
+}
+
+nav ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav a {
+    color: white;
+    font-size: 1.2rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #bdc3c7;
+}
+/* Dashboard Layout */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+.sidebar {
+    background-color: #5a708688;
+    color: #fff;
+    width: 250px;
+    padding: 30px 20px;
+    transition: width 0.3s ease, background-color 0.3s ease;  /* Add transition */
+}
+
+.sidebar:hover {
+    background-color: #34495e;  /* Change background on hover */
+}
+
+.sidebar.collapsed {
+    width: 80px; /* Change width when collapsed */
+}
+
+/* Sidebar Link hover effect */
+.sidebar-link:hover {
+    color: #1ABC9C;
+    padding-left: 10px; /* Optional: Adds slight movement on hover */
+}
+
+/* Optional: If you want to add a toggle effect */
+.sidebar.collapsed .sidebar-link {
+    display: none;  /* Hide links when sidebar is collapsed */
+}
+
+.sidebar.collapsed .sidebar-header .logo {
+    text-align: center;  /* Center logo when sidebar is collapsed */
+}   
+.sidebar {
+    background-color: #5a708688;
+    color: #fff;
+    width: 250px;
+    padding: 30px 20px;
+}
+
+.sidebar-header {
+    margin-bottom: 40px;
+}
+
+.sidebar-header .logo {
+    margin-bottom: 20px;
+}
+.sidebar .logo img {
+    height: 40px;
+}
+.sidebar-header .user-info p {
+    font-size: 14px;
+}
+
+.sidebar-nav {
+    margin-top: 20px;
+}
+
+.sidebar-link {
+    display: block;
+    margin: 10px 0;
+    color: #bdc3c7;
+    font-size: 16px;
+}
+
+.sidebar-link:hover {
+    color: #1ABC9C;
+}
+
+/* Main Content */
+.main-content {
+    margin-top: 60px;
+    flex-grow: 1;
+    padding: 100px;
+    background-color: #ecf0f1a8;
+    overflow-y: auto;
+}
+
+.main-header {
+    margin-bottom: 40px;
+}
+
+.main-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #2C3E50;
+}
+
+.main-header p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+}
+
+.cards-container {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.26);
+    width: 250px;
+    text-align: center;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #1ABC9C;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.card-btn:hover {
+    background-color: #16a085;
+}
+
+/* Dashboard Stats */
+.dashboard-stats {
+    display: flex;
+    gap: 30px;
+}
+
+.stat {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex: 1;
+}
+
+.stat h3 {
+    font-size: 1.5rem;
+    color: #2C3E50;
+}
+
+.stat p {
+    font-size: 2rem;
+    color: #1ABC9C;
+    font-weight: bold;
+}

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Cash Verification</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100&family=Reem+Kufi+Fun:wght@500&display=swap");
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-image: url(/static/img/background.png);
+            color: rgb(255, 255, 255);
+            margin-top: 80px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 9%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            height: 60px;
+            z-index: 100;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        header .logo img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        nav ul {
+            display: flex;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav a {
+            color: white;
+            font-size: 1.2rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #bdc3c7;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .content {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 100px;
+        }
+
+        .table-container {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+        }
+
+        td {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .video-container {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #video-frame {
+            border-radius: 8px;
+            width: 100%;
+            max-width: 320px;
+            height: 240px;
+            margin-bottom: 20px;
+        }
+
+        #status {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #confirm-payment {
+            margin-top: 20px;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: gray;
+            border: none;
+            border-radius: 8px;
+            cursor: not-allowed;
+            transition: background-color 0.3s ease, cursor 0.3s ease;
+        }
+
+        #confirm-payment.enabled {
+            background-color: #2ecc71;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+
+            .table-container {
+                width: 100%;
+            }
+
+            #video-frame {
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="{{ url_for('dashboard') }}" class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        </a>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+                <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h1>Face Cash Verification</h1>
+
+    <div class="content">
+        <!-- Table Section -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.price }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2"><strong>Total Cost</strong></td>
+                        <td><strong>${{ total_price }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Video and Verification Section -->
+        <div class="video-container">
+            <img id="video-frame" src="{{ url_for('video_feed') }}" alt="Video Stream">
+            <div id="status">Checking...</div>
+            <form method="POST" action="{{ url_for('face_cash', total_price=total_price) }}">
+                <button id="confirm-payment" type="submit" disabled>Confirm Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        async function checkMatchStatus() {
+            try {
+                const response = await fetch('/check_match_status');
+                const data = await response.json();
+                const statusDiv = document.getElementById('status');
+                const confirmButton = document.getElementById('confirm-payment');
+
+                if (data.face_match) {
+                    statusDiv.textContent = "Face Matched!";
+                    statusDiv.style.color = "green";
+                    confirmButton.disabled = false;
+                    confirmButton.classList.add("enabled");
+                } else {
+                    statusDiv.textContent = "No Match Found";
+                    statusDiv.style.color = "red";
+                    confirmButton.disabled = true;
+                    confirmButton.classList.remove("enabled");
+                }
+            } catch (error) {
+                console.error("Error fetching match status:", error);
+            }
+        }
+
+        setInterval(checkMatchStatus, 1000);
+    </script>
+</body>
+</html>

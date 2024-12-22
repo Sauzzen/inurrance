@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/usermanagement.css') }}">
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('dashboard') }}" class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        </a>
+        <nav>
+          <ul>
+              <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+              <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+          </ul>
+      </nav>
+    </header>
+    <div class="container">
+        <h1>User Management</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Admin</th>
+                    <th>Action</th> <!-- Added Action column for Delete button -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user[0] }}</td> <!-- Access the id using index -->
+                    <td>{{ user[1] }}</td> <!-- Access the username using index -->
+                    <td>{{ user[2] }}</td> <!-- Access the email using index -->
+                    <td>{{ "Yes" if user[3] else "No" }}</td> <!-- Access admin status using index -->
+                    <td>
+                        {% if current_user.is_admin %}
+                            <form action="{{ url_for('delete_user', user_id=user[0]) }}" method="POST">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

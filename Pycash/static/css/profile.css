@@ -1,0 +1,136 @@
+/* Profile Page Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f9fc;
+    margin: 0;
+    padding: 0;
+}
+
+/* Profile Container */
+.profile-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+/* Profile Header */
+.profile-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.profile-header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+}
+
+.profile-header p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+}
+
+/* Profile Card */
+.profile-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Profile Image */
+.profile-image img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+/* Form Elements */
+.profile-form .form-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.profile-form label {
+    font-size: 1rem;
+    color: #2c3e50;
+}
+
+.profile-form input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 5px;
+    color: #333;
+}
+
+.profile-form input:focus {
+    outline: none;
+    border-color: #1abc9c;
+}
+
+/* Button Styles */
+.profile-form .btn {
+    background-color: #1abc9c;
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.profile-form .btn:hover {
+    background-color: #16a085;
+}
+
+header img {
+    max-width: 100px;
+    height: auto;
+}
+/* Logout Link */
+.logout-link {
+    margin-top: 20px;
+}
+
+.logout-link a {
+    color: #e74c3c;
+    font-size: 1rem;
+}
+
+.logout-link a:hover {
+    text-decoration: underline;
+}
+nav ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav a {
+    color: white;
+    font-size: 1.2rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #bdc3c7;
+}

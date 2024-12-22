@@ -1,0 +1,111 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-image: url(/static/img/background.png);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* Header */
+.header {
+    background-color: #2c3e5094;
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo-container img {
+    max-width: 150px;
+    height: auto;
+}
+
+/* Registration Message */
+.message {
+    width: 80%;
+    max-width: 800px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.message h2 {
+    font-size: 2rem;
+    color: #27ae60;
+    margin-bottom: 20px;
+}
+
+.message p {
+    font-size: 1.1rem;
+    color: #34495e;
+    margin-bottom: 20px;
+}
+
+/* File Upload Form */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+input[type="file"] {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    outline: none;
+    background-color: #ecf0f1;
+}
+
+input[type="file"]:focus {
+    border-color: #27ae60;
+}
+
+input[type="hidden"] {
+    display: none;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2ecc71;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .message {
+        width: 90%;
+        padding: 20px;
+    }
+
+    button {
+        width: 100%;
+    }
+}
